@@ -13,7 +13,7 @@ protocol SettingsDelegate: FontsDelegate {
 
 class SettingsViewController: UIViewController {
     let settingsTable = UITableView.init()
-    let settingsOptions = ["Account","Change Font","","Feature Request"]
+    let settingsOptions = ["Account","Change Font","Themes","Feature Request","Strike Through on Completion"]
     weak var delegate: SettingsDelegate?
     
     override func viewDidLoad() {
@@ -26,6 +26,7 @@ class SettingsViewController: UIViewController {
     func setTable() {
         self.view.addSubview(settingsTable)
         settingsTable.translatesAutoresizingMaskIntoConstraints = false
+        settingsTable.backgroundColor = UIColor.white
         settingsTable.delegate = self
         settingsTable.dataSource = self
         settingsTable.setUpStandardTable(viewController: self)
@@ -48,20 +49,38 @@ extension SettingsViewController: UITableViewDelegate,UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
         
         switch indexPath.row {
-        case 0:
-            break
-        case 1:
-            showFonts()
-        default:
-            break
+            case 0:
+                showAccountsPage()
+            case 1:
+                showFonts()
+            case 3:
+                showFeatureRequest()
+            default:
+                break
         }
+    }
+    
+    func showAccountsPage() {
+        let accountsController = AccountViewController.init()
+        self.presentInNavController(viewControler: accountsController)
     }
     
     func showFonts() {
         let fontViewController = FontViewController.init()
         fontViewController.delegate = self.delegate
-        self.navigationController?.present(UINavigationController(rootViewController: fontViewController), animated: true, completion: nil)
+        self.presentInNavController(viewControler: fontViewController)
 //        self.present(UINavigationController(rootViewController: fontViewController), animated: true, completion: nil)
+    }
+    
+    func showFeatureRequest() {
+        let feature = FeatureRequestViewController.init()
+        self.presentInNavController(viewControler: feature)
+    }
+    
+    
+    
+    func presentInNavController(viewControler: UIViewController) {
+        self.navigationController?.present(UINavigationController(rootViewController: viewControler), animated: true, completion: nil)
     }
   
 }

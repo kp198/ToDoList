@@ -57,6 +57,8 @@ extension FontViewController : UITableViewDelegate, UITableViewDataSource {
             let accesory = UIView.init(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
             accesory.addCircle(color: UIColor.init(red: 255/255, green: 57/255, blue: 4/255, alpha: 1.0),borderColor: UIColor.init(red: 216/255, green: 52/255, blue: 8/255, alpha: 1.0), radius: 10)
             cell.accessoryView = accesory
+        } else {
+            cell.accessoryView = nil
         }
         return cell
     }

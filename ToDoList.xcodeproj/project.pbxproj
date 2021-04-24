@@ -17,6 +17,9 @@
 		7FD3142126340C5D00800E7D /* FontStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FD3142026340C5D00800E7D /* FontStyles.swift */; };
 		7FD3142426340D2500800E7D /* FontViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FD3142326340D2400800E7D /* FontViewController.swift */; };
 		7FD31427263413AC00800E7D /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FD31426263413AC00800E7D /* SettingsViewController.swift */; };
+		7FD3142B2634354B00800E7D /* FeatureRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FD3142A2634354B00800E7D /* FeatureRequestViewController.swift */; };
+		7FD3143026344E8E00800E7D /* NewTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FD3142F26344E8E00800E7D /* NewTaskViewController.swift */; };
+		7FD314342634B8E300800E7D /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FD314332634B8E300800E7D /* AccountViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +35,9 @@
 		7FD3142026340C5D00800E7D /* FontStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontStyles.swift; sourceTree = "<group>"; };
 		7FD3142326340D2400800E7D /* FontViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontViewController.swift; sourceTree = "<group>"; };
 		7FD31426263413AC00800E7D /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		7FD3142A2634354B00800E7D /* FeatureRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureRequestViewController.swift; sourceTree = "<group>"; };
+		7FD3142F26344E8E00800E7D /* NewTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTaskViewController.swift; sourceTree = "<group>"; };
+		7FD314332634B8E300800E7D /* AccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +70,8 @@
 		7FD314062633E87100800E7D /* ToDoList */ = {
 			isa = PBXGroup;
 			children = (
+				7FD3142E26344E7300800E7D /* Task */,
+				7FD314292634352600800E7D /* Settings */,
 				7FD314072633E87100800E7D /* AppDelegate.swift */,
 				7FD314092633E87100800E7D /* SceneDelegate.swift */,
 				7FD3140B2633E87100800E7D /* ViewController.swift */,
@@ -77,6 +85,23 @@
 				7FD31426263413AC00800E7D /* SettingsViewController.swift */,
 			);
 			path = ToDoList;
+			sourceTree = "<group>";
+		};
+		7FD314292634352600800E7D /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				7FD3142A2634354B00800E7D /* FeatureRequestViewController.swift */,
+				7FD314332634B8E300800E7D /* AccountViewController.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		7FD3142E26344E7300800E7D /* Task */ = {
+			isa = PBXGroup;
+			children = (
+				7FD3142F26344E8E00800E7D /* NewTaskViewController.swift */,
+			);
+			path = Task;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -153,7 +178,10 @@
 				7FD3142426340D2500800E7D /* FontViewController.swift in Sources */,
 				7FD31427263413AC00800E7D /* SettingsViewController.swift in Sources */,
 				7FD3142126340C5D00800E7D /* FontStyles.swift in Sources */,
+				7FD3143026344E8E00800E7D /* NewTaskViewController.swift in Sources */,
 				7FD3141E2633F57C00800E7D /* ToDoListCustomTableCell.swift in Sources */,
+				7FD314342634B8E300800E7D /* AccountViewController.swift in Sources */,
+				7FD3142B2634354B00800E7D /* FeatureRequestViewController.swift in Sources */,
 				7FD314082633E87100800E7D /* AppDelegate.swift in Sources */,
 				7FD3140A2633E87100800E7D /* SceneDelegate.swift in Sources */,
 			);
