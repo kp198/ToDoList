@@ -19,10 +19,13 @@ class FontViewController: UIViewController {
     
     init() {
         super.init(nibName: nil, bundle: nil)
+    }
+    
+    override func viewDidLoad() {
         self.view.backgroundColor = UIColor.white
-        self.navigationController?.navigationItem.title = "Font List"
         self.navigationItem.title = "Font List"
         setUpFontTable()
+        self.fontTable.tableFooterView = UIView()
     }
     
     required init?(coder: NSCoder) {
@@ -52,7 +55,7 @@ extension FontViewController : UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell.init()
-        cell.textLabel?.attributedText = NSAttributedString(string: fontName.allCases[indexPath.row].rawValue, attributes: [.foregroundColor: UIColor.darkText, .font: UIFont(name: fontName.allCases[indexPath.row].rawValue, size: 14)!] )
+        cell.textLabel?.attributedText = NSAttributedString(string: fontName.allCases[indexPath.row].rawValue, attributes: [.foregroundColor: UIColor.darkText, .font: UIFont(name: fontName.allCases[indexPath.row].rawValue, size: 16)!] )
         if delegate?.selectedFont() == indexPath.row {
             let accesory = UIView.init(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
             accesory.addCircle(color: UIColor.init(red: 255/255, green: 57/255, blue: 4/255, alpha: 1.0),borderColor: UIColor.init(red: 216/255, green: 52/255, blue: 8/255, alpha: 1.0), radius: 10)
@@ -68,6 +71,10 @@ extension FontViewController : UITableViewDelegate, UITableViewDataSource {
         self.dismiss(animated: true, completion: {
             self.delegate?.chosenFont(font: fontName.allCases[indexPath.row].rawValue, index: indexPath.row)
         })
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 48
     }
 }
 

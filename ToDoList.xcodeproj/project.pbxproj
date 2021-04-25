@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7FBF0F4A263550DA006F87FF /* SwiftExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FBF0F49263550DA006F87FF /* SwiftExtensions.swift */; };
+		7FBF0F4D2635694F006F87FF /* PassCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FBF0F4C2635694F006F87FF /* PassCodeViewController.swift */; };
+		7FBF0F502635F9FF006F87FF /* ToDoNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FBF0F4F2635F9FF006F87FF /* ToDoNavigationController.swift */; };
+		7FBF0F5426360DE0006F87FF /* LoginPassCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FBF0F5326360DE0006F87FF /* LoginPassCodeViewController.swift */; };
 		7FD314082633E87100800E7D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FD314072633E87100800E7D /* AppDelegate.swift */; };
 		7FD3140A2633E87100800E7D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FD314092633E87100800E7D /* SceneDelegate.swift */; };
 		7FD3140C2633E87100800E7D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FD3140B2633E87100800E7D /* ViewController.swift */; };
@@ -23,6 +27,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7FBF0F49263550DA006F87FF /* SwiftExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftExtensions.swift; sourceTree = "<group>"; };
+		7FBF0F4C2635694F006F87FF /* PassCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassCodeViewController.swift; sourceTree = "<group>"; };
+		7FBF0F4F2635F9FF006F87FF /* ToDoNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoNavigationController.swift; sourceTree = "<group>"; };
+		7FBF0F5326360DE0006F87FF /* LoginPassCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPassCodeViewController.swift; sourceTree = "<group>"; };
 		7FD314042633E87100800E7D /* ToDoList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FD314072633E87100800E7D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7FD314092633E87100800E7D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -51,6 +59,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7FBF0F4826355072006F87FF /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				7FBF0F49263550DA006F87FF /* SwiftExtensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		7FBF0F5226360D8D006F87FF /* PassCode */ = {
+			isa = PBXGroup;
+			children = (
+				7FBF0F5326360DE0006F87FF /* LoginPassCodeViewController.swift */,
+			);
+			path = PassCode;
+			sourceTree = "<group>";
+		};
 		7FD313FB2633E87100800E7D = {
 			isa = PBXGroup;
 			children = (
@@ -70,6 +94,8 @@
 		7FD314062633E87100800E7D /* ToDoList */ = {
 			isa = PBXGroup;
 			children = (
+				7FBF0F5226360D8D006F87FF /* PassCode */,
+				7FBF0F4826355072006F87FF /* Extensions */,
 				7FD3142E26344E7300800E7D /* Task */,
 				7FD314292634352600800E7D /* Settings */,
 				7FD314072633E87100800E7D /* AppDelegate.swift */,
@@ -83,6 +109,7 @@
 				7FD3142026340C5D00800E7D /* FontStyles.swift */,
 				7FD3142326340D2400800E7D /* FontViewController.swift */,
 				7FD31426263413AC00800E7D /* SettingsViewController.swift */,
+				7FBF0F4F2635F9FF006F87FF /* ToDoNavigationController.swift */,
 			);
 			path = ToDoList;
 			sourceTree = "<group>";
@@ -92,6 +119,7 @@
 			children = (
 				7FD3142A2634354B00800E7D /* FeatureRequestViewController.swift */,
 				7FD314332634B8E300800E7D /* AccountViewController.swift */,
+				7FBF0F4C2635694F006F87FF /* PassCodeViewController.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -174,13 +202,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7FBF0F5426360DE0006F87FF /* LoginPassCodeViewController.swift in Sources */,
 				7FD3140C2633E87100800E7D /* ViewController.swift in Sources */,
 				7FD3142426340D2500800E7D /* FontViewController.swift in Sources */,
 				7FD31427263413AC00800E7D /* SettingsViewController.swift in Sources */,
 				7FD3142126340C5D00800E7D /* FontStyles.swift in Sources */,
+				7FBF0F4D2635694F006F87FF /* PassCodeViewController.swift in Sources */,
 				7FD3143026344E8E00800E7D /* NewTaskViewController.swift in Sources */,
 				7FD3141E2633F57C00800E7D /* ToDoListCustomTableCell.swift in Sources */,
+				7FBF0F502635F9FF006F87FF /* ToDoNavigationController.swift in Sources */,
 				7FD314342634B8E300800E7D /* AccountViewController.swift in Sources */,
+				7FBF0F4A263550DA006F87FF /* SwiftExtensions.swift in Sources */,
 				7FD3142B2634354B00800E7D /* FeatureRequestViewController.swift in Sources */,
 				7FD314082633E87100800E7D /* AppDelegate.swift in Sources */,
 				7FD3140A2633E87100800E7D /* SceneDelegate.swift in Sources */,

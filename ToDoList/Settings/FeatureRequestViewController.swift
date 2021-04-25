@@ -41,8 +41,6 @@ class FeatureRequestViewController: UIViewController {
         textView.layer.borderColor = UIColor.systemGray.cgColor
         textView.layer.borderWidth = 0.5
         textView.layer.cornerRadius = 6
-        
-//        textView.topAnchor.constraint(equalTo: message.bottomAnchor, constant: 10).isActive = true
         textView.tag = 0
     }
     

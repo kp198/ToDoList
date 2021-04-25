@@ -13,16 +13,26 @@ class ViewController: UIViewController {
     var toDoList = [String]()
     var completedTaskCount = 0
     var fontIndex = 0
+    var shouldStrikeThrough = false
     var userFontName = fontName.AmericanTypewriter.rawValue
+    var profileImage: UIImage?
+    var userName = "User Name"
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        checkDeviceLock()
+        self.toDoTable.tableFooterView = UIView()
         toDoList = ["Build the app", "Test the app"]
+        userName = UserDefaults.standard.value(forKey: "userName") as? String ?? "User Name"
+        if let imageData = UserDefaults.standard.value(forKey: "profilePic") as? Data {
+            profileImage = UIImage(data: imageData)
+        }
         setUpFont()
         setUpToDoList()
-        setUpSettingsView()
+        self.setProfileImage()
         setUpAddNewButton()
+        (self.navigationController as? ToDoNavigationController)?.navDelegate = self
         self.navigationItem.title = "To Do List"
         if #available(iOS 11.0, *) {
             self.navigationItem.largeTitleDisplayMode = .always
@@ -42,23 +52,6 @@ class ViewController: UIViewController {
         self.view.addSubview(toDoTable)
         toDoTable.setUpStandardTable(viewController: self)
         toDoTable.backgroundColor = UIColor.white
-        
-    }
-    
-    func setUpSettingsView() {
-        let settingsButton = UIButton(frame: CGRect(x: 20, y: 20, width: 20, height: 20))
-        
-//        settingsButton.setImage(UIImage(named: "profilePic"), for: .normal)
-//        settingsButton.imageView?.contentMode = .scaleAspectFit
-//        settingsButton.imageView?.contentMode = .left
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: settingsButton)
-        settingsButton.addTarget(self, action: #selector(showSettings), for: .touchUpInside)
-    }
-    @objc func showSettings() {
-        let settingsView = SettingsViewController.init()
-        settingsView.delegate = self
-        let navCont = UINavigationController(rootViewController: settingsView)
-        self.present(navCont, animated: true, completion: nil)
     }
     
     func setUpFont() {
@@ -95,9 +88,17 @@ class ViewController: UIViewController {
         showAddTask()
     }
     
-    func showAddTask(text: String? = nil) {
-        let taskView = NewTaskViewController.init(text: text, delegate: self)
+    func showAddTask(index: Int? = nil,text: String? = nil) {
+        let taskView = NewTaskViewController.init(taskNum: index, text: text, delegate: self)
         self.present(taskView, animated: true, completion: nil)
+    }
+    
+    func checkDeviceLock(){
+    if let passCodeSet = UserDefaults.standard.value(forKey: "passCode") as? String {
+        let passCodeView =  LoginPassCodeViewController.init(passCode: passCodeSet)
+        passCodeView.modalPresentationStyle = .overFullScreen
+        self.navigationController?.present(passCodeView, animated: true, completion: nil)
+        }
     }
 
 }
@@ -114,9 +115,8 @@ extension ViewController: UITableViewDelegate,UITableViewDataSource {
         
         let cell = ToDoListCustomTableCell(style: .default, reuseIdentifier: "cell", showCheckBox: isTaskCompleted(index: indexPath.row) ? 2 : 1 ,font: userFontName)
         cell.delegate = self
-        cell.setTask(userTask: toDoList[indexPath.row],font: userFontName)
+        cell.setTask(userTask: toDoList[indexPath.row], font: userFontName, shouldStrike: shouldStrikeThrough ? isTaskCompleted(index: indexPath.row) : false)
         cell.selectionStyle = .none
-//        cell.setFont(font: userFontName)
         return cell
     }
     
@@ -132,24 +132,40 @@ extension ViewController: UITableViewDelegate,UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        return [.init(style: .destructive, title: "Delete", handler: {a,b in
-            self.toDoList.remove(at: indexPath.row)
-            if self.isTaskCompleted(index: indexPath.row) {
-                self.completedTaskCount -= 1
-            }
-            self.reloadTable()
+        return [.init(style: .destructive, title: "Delete", handler: {_,_ in
+            self.deleteTask(row: indexPath.row)
+            
         }), .init(style: .normal, title: "Edit", handler: {_,_ in
-            self.showAddTask(text: self.toDoList[indexPath.row])
+            self.showAddTask(index: indexPath.row,text: self.toDoList[indexPath.row])
         })]
     }
     
     func isTaskCompleted(index: Int) -> Bool {
         return toDoList.count - index - 1 < completedTaskCount ? true : false
     }
+    
+    func deleteTask(row: Int) {
+        self.toDoList.remove(at: row)
+        if self.isTaskCompleted(index: row) {
+            self.completedTaskCount -= 1
+        }
+        self.reloadTable()
+    }
 }
 
-
+//MARK: - Settings Delegate
 extension ViewController: SettingsDelegate {
+    
+    func getStrikeThroughState() -> Bool {
+        return shouldStrike()
+    }
+    
+    func strikeThroughStateChanged(val: Bool) {
+        UserDefaults.standard.set(val, forKey: "shouldStrike")
+        self.shouldStrikeThrough = val
+        self.reloadTable()
+    }
+    
     func selectedFont() -> Int {
         return fontIndex
     }
@@ -172,6 +188,11 @@ extension ViewController: SettingsDelegate {
 //MARK: - Cell Delegate
 
 extension ViewController: ToDoListCellDelegate {
+    
+    func shouldStrike() -> Bool {
+        return shouldStrikeThrough
+    }
+    
     func didCompleteTask(completed: Bool, cell: ToDoListCustomTableCell) {
         guard let row = toDoTable.indexPath(for: cell)?.row else {
             return
@@ -196,6 +217,8 @@ extension ViewController: ToDoListCellDelegate {
     }
 }
 
+//MARK: - New Task Delegate
+
 extension ViewController: NewTaskDelegate {
     func addTask(task: String) {
         self.toDoList.insert(task, at: 0)
@@ -206,35 +229,71 @@ extension ViewController: NewTaskDelegate {
        return self.userFontName
     }
     
-    func deleteTask(taskNum: Int) {
-        
+    func deleteTask(taskNum: Int?) {
+        guard let _ = taskNum else {
+            return
+        }
+        self.deleteTask(row: taskNum!)
+        reloadTable()
     }
     
-    func copyTask(taskNum: Int) {
-        
+    func copyTask(taskNum: Int?) {
+        guard let _ = taskNum else {
+            return
+        }
+        toDoList.append(toDoList[taskNum!])
+        reloadTable()
     }
     
-    func editTask() {
-        
+    func editTask(taskNum: Int?,task: String) {
+        guard let _ = taskNum else {
+            return
+        }
+        toDoList[taskNum!] = task
+        self.reloadTable()
     }
-    
-    
 }
 
+//MARK:- Accounts Delegate
 
-
-class ToDoNavigationController: UINavigationController {
-    override func viewDidLoad() {
-        self.navigationBar.backgroundColor = .red
-        self.navigationBar.isTranslucent = false
-        self.navigationBar.barTintColor = .red
+extension ViewController: AccountsDelegate {
+    func setUserName(name: String) {
+        UserDefaults.standard.setValue(name, forKey: "userName")
+        setProfileImage()
+        self.userName = name
+    }
+    
+    func setProfileImage(image: UIImage) {
+        UserDefaults.standard.setValue(image.jpegData(compressionQuality: 1.0), forKey: "profilePic")
+        profileImage = image
+        (self.navigationController as? ToDoNavigationController)?.setImageInButton(image: image)
+    }
+    
+    func getProfileImage() -> UIImage? {
+        return profileImage
+    }
+    
+    func getUserName() -> String {
+       return userName
+    }
+    
+    func setProfileImage() {
+        guard let image = profileImage else {
+            guard let char = userName.first else {
+                return
+            }
+            (self.navigationController as? ToDoNavigationController)?.setTitle(title: String(char))
+            return
+        }
+        (self.navigationController as? ToDoNavigationController)?.setImageInButton(image: image)
     }
 }
 
-
-extension NSAttributedString {
-    func setAttributedText(font: String?,color: UIColor?,size: CGFloat?) -> NSAttributedString {
-        
-        return NSAttributedString(string: self.string, attributes: [.font: UIFont(name: font ?? fontName.TimesNewRomanPSMT.rawValue, size: size ?? 14)!,.foregroundColor: color ?? UIColor.black])
+extension ViewController: ToDoNavigationDelegate {
+    func settingsButtonTapped() {
+        let settingsView = SettingsViewController.init()
+        settingsView.delegate = self
+        let navCont = UINavigationController(rootViewController: settingsView)
+        self.present(navCont, animated: true, completion: nil)
     }
 }

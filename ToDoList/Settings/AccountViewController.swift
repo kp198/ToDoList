@@ -8,9 +8,17 @@
 import UIKit
 import Photos
 
+protocol AccountsDelegate:NSObjectProtocol {
+    func getProfileImage() -> UIImage?
+    func getUserName() -> String
+    func setUserName(name: String)
+    func setProfileImage(image: UIImage)
+}
+
 class AccountViewController: UIViewController, UINavigationControllerDelegate {
     
-    let accountInfo = ["Profile Image","Name"]
+    let accountInfo = ["Profile Image","USER NAME","PASSWORD"]
+    weak var delegate: AccountsDelegate?
     let accountsTable = UITableView.init()
     let profileImage = UIButton.init()
     init() {
@@ -23,6 +31,8 @@ class AccountViewController: UIViewController, UINavigationControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         setAccountsPage()
+        self.navigationItem.title = "Account"
+        self.accountsTable.tableFooterView = UIView()
     }
     
     func setAccountsPage() {
@@ -36,14 +46,16 @@ class AccountViewController: UIViewController, UINavigationControllerDelegate {
     }
     
     func setProfileImage(letter: Character?) {
-        guard let imageData = UserDefaults.standard.value(forKey: "profilePic") as? Data else {
+        guard let image = delegate?.getProfileImage() else {
             guard let char = letter else {
                 return
             }
             profileImage.setTitle(String(char), for: .normal)
             return
         }
-        profileImage.setImage(UIImage(data: imageData), for: .normal)
+        profileImage.setImage(image, for: .normal)
+        profileImage.layer.cornerRadius = profileImage.frame.size.height/2
+        profileImage.layer.masksToBounds = true
     }
     
     func setUpProfileImage(cell: UITableViewCell) {
@@ -57,11 +69,16 @@ class AccountViewController: UIViewController, UINavigationControllerDelegate {
         profileImage.layer.cornerRadius = 30
         profileImage.addTarget(self, action: #selector(chooseProfilePic), for: .touchUpInside)
     }
+    
+    func showPassCodeScreen() {
+        let passCode = PassCodeViewController.init()
+        self.navigationController?.pushViewController(passCode, animated: true)
+    }
 }
 
 extension AccountViewController: UITableViewDelegate,UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1// accountInfo.count
+        return 1
     }
     func numberOfSections(in tableView: UITableView) -> Int {
         return accountInfo.count
@@ -79,9 +96,11 @@ extension AccountViewController: UITableViewDelegate,UITableViewDataSource {
             cell.contentView.addSubview(nameField)
             nameField.frame = cell.contentView.frame.inset(by: UIEdgeInsets(top: 0, left: 20, bottom: 0, right: -20))
             nameField.placeholder = "Type your name"
-            nameField.text = UserDefaults.standard.value(forKey: "userName") as? String
+            nameField.attributedText = NSAttributedString(string: delegate?.getUserName() ?? "User Name").setAttributedText(string: nil, font: fontName.TamilSangamMN_Bold.rawValue, color: UIColor.init(red: 21/255, green: 147/255, blue: 240/255, alpha: 1.0), size: 17)
             setProfileImage(letter: nameField.text?.first)
             nameField.delegate = self
+        case 2:
+            cell.textLabel?.attributedText = NSAttributedString(string: "Set A Password").setAttributedText(font: fontName.TamilSangamMN_Bold.rawValue, size: 17)
         default:
             break
         }
@@ -91,8 +110,8 @@ extension AccountViewController: UITableViewDelegate,UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
-        case 1:
-            return "USER NAME"
+        case 1,2:
+            return accountInfo[section]
         default:
             break
         }
@@ -108,13 +127,12 @@ extension AccountViewController: UITableViewDelegate,UITableViewDataSource {
         }
     }
     
-//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//        let header = UIView.init()
-//        header.
-//        header.addSubview()
-//        return header
-//    }
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        if indexPath.section == 2 {
+            showPassCodeScreen()
+        }
+    }
     
 }
 
@@ -129,7 +147,7 @@ extension AccountViewController : UITextFieldDelegate {
         guard let text = textField.text else {
             return
         }
-        UserDefaults.standard.setValue(text, forKey: "userName")
+        delegate?.setUserName(name: text)
         self.setProfileImage(letter: text.first)
         
     }
@@ -179,8 +197,7 @@ extension AccountViewController: UIImagePickerControllerDelegate {
             return
         }
         self.profileImage.setImage(image, for: .normal)
-        
-        UserDefaults.standard.setValue(image.jpegData(compressionQuality: 1.0), forKey: "profilePic")
+        delegate?.setProfileImage(image: image)
         
     }
 }

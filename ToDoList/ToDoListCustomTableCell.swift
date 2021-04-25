@@ -10,6 +10,7 @@ import UIKit
 protocol ToDoListCellDelegate: NSObjectProtocol {
     func didChangeTask(cell: ToDoListCustomTableCell)
     func didCompleteTask(completed: Bool,cell: ToDoListCustomTableCell)
+    func shouldStrike() -> Bool
 }
 
 
@@ -53,12 +54,16 @@ class ToDoListCustomTableCell: UITableViewCell {
         
     }
     
-    func setFont(font: String) {
-        self.task.attributedText = NSAttributedString(string: self.task.text ?? "", attributes: [.font: UIFont(name: font, size: 15)!])
-    }
+//    func setFont(font: String) {
+//        self.task.attributedText = NSAttributedString(string: self.task.text ?? "", attributes: [.font: UIFont(name: font, size: 15)!])
+//        setTask(userTask: self.task.text ?? "",font: font)
+//    }
     
-    func setTask(userTask: String,font: String) {
-        task.attributedText = NSAttributedString(string: userTask, attributes: [.foregroundColor: UIColor.lightGray,.font:UIFont.init(name: font, size: 15)!])
+    func setTask(userTask: String,font: String,shouldStrike: Bool = false) {
+        
+        task.attributedText = shouldStrike ? NSAttributedString(string: userTask).setAttributedText(string: userTask,font: font, color: nil, size: 15,strikeThroughStyle: NSUnderlineStyle.single.rawValue ,strikeColor: .black) : NSAttributedString(string: userTask).setAttributedText(font: font, size: 15)
+        
+//        task.attributedText = NSAttributedString(string: userTask, attributes: [.foregroundColor: UIColor.lightGray,.font:UIFont.init(name: font, size: 15)!])
     }
     
     @objc func didSelectCheckBox(button: UIButton) {
@@ -73,26 +78,3 @@ class ToDoListCustomTableCell: UITableViewCell {
     }
 }
 
-
-
-extension UIView {
-    
-    func addCircle(color: UIColor, borderColor: UIColor = .black, radius: CGFloat, borderWidth : CGFloat = 0.5) {
-        let circle = UIBezierPath.init(arcCenter: CGPoint(x: bounds.size.width/2 ,y: bounds.size.height/2), radius: CGFloat(radius), startAngle: CGFloat(0), endAngle: CGFloat(Double.pi * 2), clockwise: false)
-        let shapeLayer = CAShapeLayer()
-        shapeLayer.path = circle.cgPath
-            shapeLayer.fillColor = color.cgColor // UIColor(red: 255.0/255.0, green: 201.0/255.0, blue: 238.0/255.0, alpha:1.0).cgColor
-        shapeLayer.strokeColor = borderColor.cgColor
-//        shapeLayer.s
-        self.layer.addSublayer(shapeLayer)
-        
-    }
-    
-    func addShadow(color: UIColor) {
-        self.layer.shadowRadius = 2.0
-        self.layer.shadowOpacity = 0.8
-        self.layer.shadowColor = color.cgColor
-        self.layer.shadowOffset = .zero
-    }
-    
-}
