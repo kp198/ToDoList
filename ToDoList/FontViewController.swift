@@ -26,6 +26,7 @@ class FontViewController: UIViewController {
         self.navigationItem.title = "Font List"
         setUpFontTable()
         self.fontTable.tableFooterView = UIView()
+        self.fontTable.backgroundColor = .white
     }
     
     required init?(coder: NSCoder) {
@@ -55,6 +56,7 @@ extension FontViewController : UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell.init()
+        cell.backgroundColor = .white
         cell.textLabel?.attributedText = NSAttributedString(string: fontName.allCases[indexPath.row].rawValue, attributes: [.foregroundColor: UIColor.darkText, .font: UIFont(name: fontName.allCases[indexPath.row].rawValue, size: 16)!] )
         if delegate?.selectedFont() == indexPath.row {
             let accesory = UIView.init(frame: CGRect(x: 0, y: 0, width: 10, height: 10))

@@ -26,6 +26,7 @@ class NewTaskViewController: UIViewController {
         self.taskNumber = taskNum
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
+        textBox.backgroundColor = .white
         textBox.attributedText = NSAttributedString(string: text ?? "Add a New Task", attributes: [.foregroundColor:UIColor.gray,.font:  UIFont(name: delegate?.getFontName() ?? fontName.AppleSymbols.rawValue, size: 16)!])
     }
     
@@ -44,13 +45,17 @@ class NewTaskViewController: UIViewController {
         let boundaryView = UIView()
         boundaryView.backgroundColor = .white// UIColor.init(red: 236, green: 112, blue: 99, alpha: 1.0)
         boundaryView.layer.cornerRadius = 6
+        if #available(iOS 11.0, *) {
+            boundaryView.layer.maskedCorners = [.layerMinXMinYCorner,.layerMaxXMinYCorner]
+        } else {
+        }
         self.view.addSubview(boundaryView)
         boundaryView.translatesAutoresizingMaskIntoConstraints = false
         boundaryView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant:  UIDevice.current.userInterfaceIdiom == .pad ? 0 : 10).isActive = true
         boundaryView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: UIDevice.current.userInterfaceIdiom == .pad ? 0 : -10).isActive = true
         backgroundViewBottom = boundaryView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         backgroundViewBottom.isActive = true
-       boundaryView.heightAnchor.constraint(equalToConstant: 200).isActive = true
+        
         self.view.addSubview(textBox)
         boundaryView.layer.cornerRadius = 6
         textBox.translatesAutoresizingMaskIntoConstraints = false
@@ -58,6 +63,9 @@ class NewTaskViewController: UIViewController {
        
         textBox.leadingAnchor.constraint(equalTo: boundaryView.leadingAnchor).isActive = true
         textBox.trailingAnchor.constraint(equalTo: boundaryView.trailingAnchor).isActive = true
+        boundaryView.heightAnchor.constraint(greaterThanOrEqualTo: textBox.heightAnchor).isActive = true
+//        boundaryView.bottomAnchor.constraint(equalTo: self.textBox.topAnchor).isActive = true
+        boundaryView.topAnchor.constraint(equalTo: self.textBox.topAnchor, constant: -20).isActive = true
         let doneButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 24))
         doneButton.setTitle("Done", for: .normal)
         doneButton.setTitleColor(.red, for: .normal)
@@ -65,9 +73,10 @@ class NewTaskViewController: UIViewController {
         doneButton.translatesAutoresizingMaskIntoConstraints = false
         doneButton.trailingAnchor.constraint(equalTo: boundaryView.trailingAnchor, constant: -10).isActive = true
         doneButton.heightAnchor.constraint(equalToConstant: 24).isActive = true
-        doneButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        doneButton.widthAnchor.constraint(lessThanOrEqualToConstant: 100).isActive = true
         doneButton.topAnchor.constraint(equalTo: boundaryView.topAnchor).isActive = true
         doneButton.addTarget(self, action: #selector(donePressed), for: .touchUpInside)
+        doneButton.sizeToFit()
         boundaryView.addSubview(buttonsLayer)
         buttonsLayer.translatesAutoresizingMaskIntoConstraints = false
         buttonsLayer.leadingAnchor.constraint(equalTo: boundaryView.leadingAnchor).isActive = true

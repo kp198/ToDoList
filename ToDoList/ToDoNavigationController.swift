@@ -27,11 +27,11 @@ class ToDoNavigationController: UINavigationController {
     func setUpLeftBarButtonItem() {
         self.navigationBar.addSubview(settingsButton)
         settingsButton.translatesAutoresizingMaskIntoConstraints = false
-        settingsButton.topAnchor.constraint(equalTo: self.navigationBar.topAnchor,constant: 10).isActive = true
-        settingsButton.bottomAnchor.constraint(equalTo: self.navigationBar.bottomAnchor,constant: -10).isActive = true
-        settingsButton.leadingAnchor.constraint(equalTo: self.navigationBar.leadingAnchor, constant: 20).isActive = true
-        settingsButton.widthAnchor.constraint(equalToConstant: self.navigationBar.frame.size.height-20).isActive = true
-        settingsButton.layer.cornerRadius = (self.navigationBar.frame.size.height-20)/2
+        settingsButton.topAnchor.constraint(equalTo: self.navigationBar.topAnchor,constant: 5).isActive = true
+        settingsButton.bottomAnchor.constraint(equalTo: self.navigationBar.bottomAnchor,constant: -5).isActive = true
+        settingsButton.leadingAnchor.constraint(equalTo: self.navigationBar.leadingAnchor, constant: 10).isActive = true
+        settingsButton.widthAnchor.constraint(equalToConstant: self.navigationBar.frame.size.height-10).isActive = true
+        settingsButton.layer.cornerRadius = (self.navigationBar.frame.size.height-10)/2
         settingsButton.layer.masksToBounds = true
         settingsButton.addTarget(self, action: #selector(settingsTapped), for: .touchUpInside)
     }

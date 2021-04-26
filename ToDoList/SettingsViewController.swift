@@ -24,6 +24,9 @@ class SettingsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.red]
+        self.navigationController?.navigationBar.barTintColor = .white
+        self.navigationController?.navigationBar.addShadow(color: .gray)
         self.setTable()
         self.navigationItem.title = "Settings"
         self.settingsTable.tableFooterView = UIView()
@@ -52,6 +55,7 @@ extension SettingsViewController: UITableViewDelegate,UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
+        cell.backgroundColor = .white
         cell.textLabel?.attributedText = NSAttributedString(string: settingsOptions[indexPath.row], attributes: [.foregroundColor: UIColor.black,.font : UIFont(name: fontName.Georgia_Bold.rawValue, size: 14)!])
         if indexPath.row == 4 {
             let strikeSwitch = UISwitch(frame: CGRect(x: 0, y: 0, width: 45, height: 25))

@@ -25,8 +25,10 @@ class PassCodeViewController:UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         self.navigationController?.navigationBar.barTintColor = .white
+        self.navigationController?.navigationBar.tintColor = .red
         self.navigationItem.title = "Passcode"
        footerMessage = footerMessage.setAttributedText(font: fontName.Avenir_Medium.rawValue, color: UIColor.init(red: 186/255, green: 182/255, blue: 183/255, alpha: 1.0), size: 15)
+        passCodeTable.backgroundColor = .white
         self.view.addSubview(passCodeTable)
         self.passCodeTable.translatesAutoresizingMaskIntoConstraints = false
         self.passCodeTable.setUpStandardTable(viewController: self)
@@ -107,6 +109,7 @@ extension PassCodeViewController: UITableViewDelegate,UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell.init()
+        cell.backgroundColor = .white
         switch indexPath.row {
         case 0:
             cell.textLabel?.attributedText = NSAttributedString(string: "PASSWORD").setAttributedText(font: fontName.GillSans_SemiBold.rawValue , size: 15)
@@ -175,7 +178,7 @@ extension PassCodeViewController: UITextFieldDelegate {
         textField.delegate = self
         let showPassButton = UIButton.init(frame: CGRect(x: 0, y: 0, width: 24, height: 24))
         cell.accessoryView = showPassButton
-        showPassButton.setImage(UIImage(named: "pencil"), for: .normal)
+        showPassButton.setImage(UIImage(named: "showpass"), for: .normal)
         tag == 10 ? showPassButton.addTarget(self, action: #selector(showPassword(button:)), for: .touchUpInside) : showPassButton.addTarget(self, action: #selector(showConfirmPassword(button:)), for: .touchUpInside)
     }
     
@@ -198,6 +201,7 @@ extension PassCodeViewController: UITextFieldDelegate {
     
     @objc func showPassword(button: UIButton) {
         enterField.isSecureTextEntry = button.isSelected
+        button.isSelected ? button.setImage(UIImage(named: "hidepass"), for: .normal) : button.setImage(UIImage(named: "showpass"), for: .normal) 
         button.isSelected = !button.isSelected
     }
     

@@ -11,7 +11,11 @@ class ViewController: UIViewController {
 
     let toDoTable = UITableView.init(frame: .zero, style: .grouped)
     var toDoList = [String]()
-    var completedTaskCount = 0
+    var completedTaskCount = 0 {
+        didSet {
+            
+        }
+    }
     var fontIndex = 0
     var shouldStrikeThrough = false
     var userFontName = fontName.AmericanTypewriter.rawValue
@@ -140,8 +144,23 @@ extension ViewController: UITableViewDelegate,UITableViewDataSource {
         })]
     }
     
+    @available(iOS 11.0, *)
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let deleteAction = UIContextualAction.init(style: .destructive, title: nil, handler: {_,_,_  in
+            self.deleteTask(row: indexPath.row)
+        })
+        deleteAction.backgroundColor = .red
+        deleteAction.image = UIImage(named: "delete")
+        let editAction = UIContextualAction.init(style: .destructive, title: nil, handler: {_,_,_  in
+            self.showAddTask(index: indexPath.row,text: self.toDoList[indexPath.row])
+        })
+        editAction.backgroundColor = .gray
+        editAction.image = UIImage(named: "pencil")
+        return UISwipeActionsConfiguration.init(actions: [editAction,deleteAction])
+    }
+    
     func isTaskCompleted(index: Int) -> Bool {
-        return toDoList.count - index - 1 < completedTaskCount ? true : false
+        return toDoList.count - index - 1 < completedTaskCount && completedTaskCount > 0 ? true : false
     }
     
     func deleteTask(row: Int) {
@@ -297,3 +316,4 @@ extension ViewController: ToDoNavigationDelegate {
         self.present(navCont, animated: true, completion: nil)
     }
 }
+

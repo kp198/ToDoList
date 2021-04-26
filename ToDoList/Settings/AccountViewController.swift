@@ -37,6 +37,7 @@ class AccountViewController: UIViewController, UINavigationControllerDelegate {
     
     func setAccountsPage() {
         self.view.backgroundColor = .white
+        accountsTable.backgroundColor = .white
         self.view.addSubview(accountsTable)
         self.accountsTable.translatesAutoresizingMaskIntoConstraints = false
         self.accountsTable.backgroundColor = .white
@@ -108,15 +109,28 @@ extension AccountViewController: UITableViewDelegate,UITableViewDataSource {
         return cell
     }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        let headerLabel = UILabel()
+        headerLabel.frame = headerView.frame
         switch section {
         case 1,2:
-            return accountInfo[section]
+            headerLabel.attributedText = NSAttributedString(string: accountInfo[section]).setAttributedText(font: fontName.DamascusBold.rawValue, size: 17)
         default:
             break
         }
-        return nil
+        return headerView
     }
+    
+//    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+//        switch section {
+//        case 1,2:
+//            return accountInfo[section]
+//        default:
+//            break
+//        }
+//        return nil
+//    }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
