@@ -7,11 +7,18 @@
 
 import UIKit
 
+protocol LoginPassCodeHandler: NSObjectProtocol {
+    func deleteAllUserData()
+    func clearUserData()
+    func resetSettings()
+}
+
 class LoginPassCodeViewController: UIViewController {
     let passCodeField = UITextField(frame: CGRect(x: 0, y: 0, width: 100, height: 60))
     var passCodeBottom = NSLayoutConstraint()
     let passCode: String
     let showPassCodeButton = UIButton(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+    weak var delegate: LoginPassCodeHandler?
     
     init(passCode: String) {
         self.passCode = passCode
@@ -51,8 +58,7 @@ class LoginPassCodeViewController: UIViewController {
         passCodeField.contentMode = .redraw
         passCodeField.textAlignment = .center
         passCodeField.delegate = self
-        passCodeBottom = passCodeField.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -50)
-        passCodeBottom.isActive = true
+//        passCodeBottom.isActive = true
         passCodeField.layer.cornerRadius = 20
         
 //        passCodeField.layer.shadowOffset = .zero
@@ -63,6 +69,7 @@ class LoginPassCodeViewController: UIViewController {
         passCodeField.layer.borderWidth = 1.0
         passCodeField.textColor = .black
         passCodeField.isSecureTextEntry = true
+        setUpForgotPassword()
     }
     
     @objc func showKeyboard(notification: NSNotification) {
@@ -88,8 +95,34 @@ class LoginPassCodeViewController: UIViewController {
             showPassCodeButton.tag = 155
             showPassCodeButton.setImage(UIImage(named: "showpass"), for: .normal)
         }
+      }
+    
+    func setUpForgotPassword() {
+        let forgotPasswordButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 40))
+//        forgotPasswordButton.backgroundColor = .red
+        forgotPasswordButton.setAttributedTitle(NSAttributedString(string: "Forgot Password?").setAttributedText(font: fontName.AlNile.rawValue, color: .lightGray, size: 14), for: .normal)
+        self.view.addSubview(forgotPasswordButton)
+        forgotPasswordButton.translatesAutoresizingMaskIntoConstraints = false
+        passCodeBottom = forgotPasswordButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor,constant: -50)
+        passCodeBottom.isActive = true
+        forgotPasswordButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        forgotPasswordButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 100).isActive = true
+        forgotPasswordButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -50).isActive = true
+        forgotPasswordButton.sizeToFit()
+        passCodeField.bottomAnchor.constraint(equalTo: forgotPasswordButton.topAnchor, constant: -20).isActive = true
+        forgotPasswordButton.addTarget(self, action: #selector(forgotPassword), for: .touchUpInside)
+        passCodeField.becomeFirstResponder()
     }
     
+    @objc func forgotPassword() {
+        let alert = UIAlertController(title: "Read Carefully!!", message: "You will lose all your current data if you continue now. Are you ok with that?", preferredStyle: .alert)
+        alert.addAction(.init(title: "Ok", style: .default, handler: {_ in
+            self.delegate?.deleteAllUserData()
+            self.dismiss(animated: true, completion: nil)
+        }))
+        alert.addAction(.init(title: "Cancel", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
 }
 
 extension LoginPassCodeViewController: UITextFieldDelegate {
@@ -105,9 +138,9 @@ extension LoginPassCodeViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         if textField.text == passCode {
             self.dismiss(animated: true, completion: nil)
-        } else if textField.isEmpty() {
+        } else if textField.isEmpty() && self.presentedViewController as? UIAlertController == nil {
             showAlert(title: "Please Enter The Passcode", message: nil)
-        } else {
+        } else if self.presentedViewController as? UIAlertController == nil {
             showAlert(title: "Wrong PassCode Entered", message: nil)
         }
     }

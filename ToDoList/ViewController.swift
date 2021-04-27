@@ -25,7 +25,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        checkDeviceLock()
+//        checkDeviceLock()
         self.toDoTable.tableFooterView = UIView()
         toDoList = ["Build the app", "Test the app"]
         userName = UserDefaults.standard.value(forKey: "userName") as? String ?? "User Name"
@@ -44,7 +44,7 @@ class ViewController: UIViewController {
             // Fallback on earlier versions
         }
         self.view.backgroundColor = UIColor.white
-        self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white,.font: UIFont.init(name: fontName.NotoSansKannada_Bold.rawValue, size: 20)!]
+        self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white,.font: UIFont.init(name: fontName.NotoSansKannada_Bold.rawValue, size: 20) ?? UIFont.systemFont(ofSize: 20)]
         self.navigationController?.navigationBar.backgroundColor = .red
     }
     
@@ -100,6 +100,9 @@ class ViewController: UIViewController {
     func checkDeviceLock(){
     if let passCodeSet = UserDefaults.standard.value(forKey: "passCode") as? String {
         let passCodeView =  LoginPassCodeViewController.init(passCode: passCodeSet)
+        self.view.window?.rootViewController = passCodeView
+        self.view.window?.makeKeyAndVisible()
+        passCodeView.delegate = self
         passCodeView.modalPresentationStyle = .overFullScreen
         self.navigationController?.present(passCodeView, animated: true, completion: nil)
         }
@@ -317,3 +320,23 @@ extension ViewController: ToDoNavigationDelegate {
     }
 }
 
+extension ViewController: LoginPassCodeHandler {
+    
+    func resetSettings() {
+        UserDefaults.standard.setValue(nil, forKey: "userFont")
+    }
+    
+    func clearUserData() {
+        resetSettings()
+        UserDefaults.standard.setValue(nil, forKey: "userName")
+        UserDefaults.standard.setValue(nil, forKey: "profilePic")
+        UserDefaults.standard.setValue(nil, forKey: "userInfo")
+    }
+    
+    
+    func deleteAllUserData() {
+        resetSettings()
+        clearUserData()
+        UserDefaults.standard.setValue(nil, forKey: "passCode")
+    }
+}

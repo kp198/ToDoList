@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol SettingsDelegate: FontsDelegate,AccountsDelegate {
+protocol SettingsDelegate: FontsDelegate,AccountsDelegate,LoginPassCodeHandler {
     func strikeThroughStateChanged(val: Bool)
     func getStrikeThroughState() -> Bool
 }
@@ -103,6 +103,7 @@ extension SettingsViewController: UITableViewDelegate,UITableViewDataSource {
     
     func showPrivacyPolicy() {
         let privacy = PrivacyViewController.init()
+        privacy.delegate = self.delegate
         self.presentInNavController(viewControler: privacy)
     }
     
@@ -120,6 +121,8 @@ extension SettingsViewController: UITableViewDelegate,UITableViewDataSource {
 
 
 class PrivacyViewController: UIViewController {
+    
+    weak var delegate: LoginPassCodeHandler?
     let privacyTable = UITableView.init()
     override func viewDidLoad() {
         self.view.addSubview(privacyTable)
@@ -173,7 +176,7 @@ extension PrivacyViewController : UITableViewDelegate,UITableViewDataSource {
     func resetToDefaultSettings() {
         showAlert(title: "Alert", message: "Are you sure you want to restore to default Settings?", acceptAction: {
             _ in
-            UserDefaults.standard.setValue(nil, forKey: "userFont")
+            self.delegate?.resetSettings()
         }, cancelAction: {
             _ in
         })
@@ -182,16 +185,19 @@ extension PrivacyViewController : UITableViewDelegate,UITableViewDataSource {
     func clearUserData() {
         showAlert(title: "Alert", message: "Are you sure you want to delete all user data? (userName,profilePic)", acceptAction: {
             _ in
-            UserDefaults.standard.setValue(nil, forKey: "userName")
-            UserDefaults.standard.setValue(nil, forKey: "profilePic")
-            UserDefaults.standard.setValue(nil, forKey: "userInfo")
+            self.delegate?.clearUserData()
         }, cancelAction: {
             _ in
         })
     }
     
     func clearAllData() {
-        
+        showAlert(title: "Alert", message: "Are you sure you want to delete all user data? (userName,profilePic)", acceptAction: {
+            _ in
+            self.delegate?.deleteAllUserData()
+        }, cancelAction: {
+            _ in
+        })
     }
     
     func showAlert(title: String, message: String, acceptAction: @escaping (UIAlertAction)->(), cancelAction: @escaping (UIAlertAction)->()) {

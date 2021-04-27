@@ -18,6 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let _ = (scene as? UIWindowScene) else { return }
         window?.tintColor = UIColor.red
+        window?.overrideUserInterfaceStyle = .light
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -40,6 +41,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneWillEnterForeground(_ scene: UIScene) {
         // Called as the scene transitions from the background to the foreground.
         // Use this method to undo the changes made on entering the background.
+        self.checkDeviceLock()
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
@@ -48,6 +50,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // to restore the scene back to its current state.
     }
 
-
+    func checkDeviceLock(){
+    if let passCodeSet = UserDefaults.standard.value(forKey: "passCode") as? String {
+        let passCodeView =  LoginPassCodeViewController.init(passCode: passCodeSet)
+        if let time = UserDefaults.standard.value(forKey: "passCodeTimer") as? Double {
+            if (Int(time - Double(Date.init().timeIntervalSince1970))/Int(Double(1000*60*60))) % 24 > 1 {
+            passCodeView.modalPresentationStyle = .overFullScreen
+            self.window?.rootViewController?.present(passCodeView, animated: true, completion: nil)
+            }
+        } else {
+            passCodeView.modalPresentationStyle = .overFullScreen
+            self.window?.rootViewController?.present(passCodeView, animated: true, completion: nil)
+        }
+//        self.window?.rootViewController = passCodeView
+//        self.view.window?.makeKeyAndVisible()
+//        passCodeView.delegate =
+        }
+    }
+    
 }
 
